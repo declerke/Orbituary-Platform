@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obituaries</title>
+    <meta name="description" content="Latest obituaries submitted to our platform">
+    <meta name="keywords" content="obituaries, death notices, memorials">
+    <meta property="og:title" content="Obituaries">
+    <meta property="og:description" content="Latest obituaries submitted to our platform">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://yourwebsite.com/obituaries">
+    <meta property="og:image" content="http://yourwebsite.com/static/images/og_image.jpg">
+    <link rel="canonical" href="http://yourwebsite.com/obituaries">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Obituaries</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date of Birth</th>
+                <th>Date of Death</th>
+                <th>Content</th>
+                <th>Author</th>
+                <th>Submission Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obituary in obituaries %}
+            <tr>
+                <td>{{ obituary.name }}</td>
+                <td>{{ obituary.date_of_birth }}</td>
+                <td>{{ obituary.date_of_death }}</td>
+                <td>{{ obituary.content }}</td>
+                <td>{{ obituary.author }}</td>
+                <td>{{ obituary.submission_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="social-share">
+        <a href="https://www.facebook.com/sharer/sharer.php?u=http://yourwebsite.com/obituaries" target="_blank">Share on Facebook</a>
+        <a href="https://twitter.com/intent/tweet?url=http://yourwebsite.com/obituaries&text=Check out these obituaries" target="_blank">Share on Twitter</a>
+    </div>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Obituaries",
+      "description": "Latest obituaries submitted to our platform",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Your Website Name"
+      }
+    }
+    </script>
+</body>
+</html>
