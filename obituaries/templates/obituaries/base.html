@@ -1,0 +1,47 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f1e8">
+    <meta name="description" content="{% block page_description %}A community remembrance space for the lives and stories we carry with us.{% endblock %}">
+    <title>{% block title %}Obituaries — lives remembered, together{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/orbituary-mark.svg' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="page-shell">
+        <header class="site-header">
+            <a class="wordmark" href="{% url 'view_obituaries' %}" aria-label="Obituaries home">
+                <span class="wordmark-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M6 17.5c5.8-.7 10.6-5.8 11.5-12-6.2.8-11.3 5.7-12 11.5m1.7-2.1 7.4-7.2M12.4 13.2c2.4.4 4.1 2 4.5 4.4-2.5-.3-4.1-2-4.5-4.4Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="wordmark-copy"><strong>Obituaries</strong><small>A place to remember together</small></span>
+            </a>
+            <nav class="primary-nav" aria-label="Primary navigation">
+                <a class="nav-link{% if request.resolver_match.url_name == 'view_obituaries' %} is-current{% endif %}" href="{% url 'view_obituaries' %}"{% if request.resolver_match.url_name == 'view_obituaries' %} aria-current="page"{% endif %}>Remembrances</a>
+                <a class="nav-link nav-cta{% if request.resolver_match.url_name == 'submit_obituary' %} is-current{% endif %}" href="{% url 'submit_obituary' %}"{% if request.resolver_match.url_name == 'submit_obituary' %} aria-current="page"{% endif %}>Share a remembrance <span aria-hidden="true">+</span></a>
+            </nav>
+        </header>
+
+        {% if messages %}
+            <div class="message-stack" aria-label="Updates">
+                {% for message in messages %}
+                    <p class="notice notice-{{ message.tags|default:'info' }}" role="status">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <main id="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <p>Obituaries <span aria-hidden="true">·</span> A place to remember together</p>
+            <p>Made for the stories that stay with us.</p>
+        </footer>
+    </div>
+</body>
+</html>

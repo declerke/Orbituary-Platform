@@ -1,60 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Obituaries</title>
-    <meta name="description" content="Latest obituaries submitted to our platform">
-    <meta name="keywords" content="obituaries, death notices, memorials">
-    <meta property="og:title" content="Obituaries">
-    <meta property="og:description" content="Latest obituaries submitted to our platform">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="http://yourwebsite.com/obituaries">
-    <meta property="og:image" content="http://yourwebsite.com/static/images/og_image.jpg">
-    <link rel="canonical" href="http://yourwebsite.com/obituaries">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <h1>Obituaries</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Date of Birth</th>
-                <th>Date of Death</th>
-                <th>Content</th>
-                <th>Author</th>
-                <th>Submission Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for obituary in obituaries %}
-            <tr>
-                <td>{{ obituary.name }}</td>
-                <td>{{ obituary.date_of_birth }}</td>
-                <td>{{ obituary.date_of_death }}</td>
-                <td>{{ obituary.content }}</td>
-                <td>{{ obituary.author }}</td>
-                <td>{{ obituary.submission_date }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="social-share">
-        <a href="https://www.facebook.com/sharer/sharer.php?u=http://yourwebsite.com/obituaries" target="_blank">Share on Facebook</a>
-        <a href="https://twitter.com/intent/tweet?url=http://yourwebsite.com/obituaries&text=Check out these obituaries" target="_blank">Share on Twitter</a>
+{% extends "obituaries/base.html" %}
+
+{% block title %}Lives remembered, together | Obituaries{% endblock %}
+{% block page_description %}Read stories shared by family and friends, or add a remembrance of your own.{% endblock %}
+
+{% block content %}
+<section class="welcome" aria-labelledby="welcome-title">
+    <div class="welcome-copy">
+        <p class="eyebrow">A community remembrance space</p>
+        <h1 id="welcome-title">Lives remembered, together.</h1>
+        <p>Read stories shared by family and friends, or add a remembrance of your own. The smallest memories often mean the most.</p>
+        <div class="welcome-actions">
+            <a class="button button-primary" href="#archive">Browse remembrances <span aria-hidden="true">↓</span></a>
+            <a class="button button-secondary" href="{% url 'submit_obituary' %}">Share a remembrance</a>
+        </div>
     </div>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebPage",
-      "name": "Obituaries",
-      "description": "Latest obituaries submitted to our platform",
-      "publisher": {
-        "@type": "Organization",
-        "name": "Your Website Name"
-      }
-    }
-    </script>
-</body>
-</html>
+    <div class="welcome-art" aria-hidden="true">
+        <div class="memory-ring"></div>
+        <div class="memory-note">
+            <span class="note-flourish">✳</span>
+            <strong>Stories stay close.</strong>
+            <span>Remember · Share · Keep close</span>
+        </div>
+    </div>
+</section>
+
+<section class="archive" id="archive" aria-labelledby="archive-title">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">From our community</p>
+            <h2 id="archive-title">Recent remembrances</h2>
+            <p>Shared by the people who knew them best.</p>
+        </div>
+        {% if obituaries %}<span class="archive-count">{{ obituaries|length }} shared {{ obituaries|length|pluralize:'story,stories' }}</span>{% endif %}
+    </div>
+
+    <div class="memory-list">
+        {% for obituary in obituaries %}
+            <article class="memory-entry{% if forloop.first %} memory-entry-featured{% endif %}" aria-labelledby="memory-{{ obituary.pk }}">
+                <div class="date-rail">
+                    <strong>Shared</strong>
+                    <time datetime="{{ obituary.submission_date|date:'c' }}">{{ obituary.submission_date|date:'j F Y' }}</time>
+                </div>
+                <div class="entry-copy">
+                    <h3 id="memory-{{ obituary.pk }}">{{ obituary.name }}</h3>
+                    <p class="life-dates">
+                        <time datetime="{{ obituary.date_of_birth|date:'Y-m-d' }}">{{ obituary.date_of_birth|date:'j F Y' }}</time>
+                        <span aria-hidden="true">—</span>
+                        <time datetime="{{ obituary.date_of_death|date:'Y-m-d' }}">{{ obituary.date_of_death|date:'j F Y' }}</time>
+                    </p>
+                    <p class="entry-story">{{ obituary.content|linebreaksbr }}</p>
+                </div>
+                <p class="entry-byline"><strong>Remembered by</strong>{{ obituary.author }}</p>
+            </article>
+        {% empty %}
+            <div class="empty-state">
+                <span class="empty-mark" aria-hidden="true">✳</span>
+                <div>
+                    <h3>Make room for a story.</h3>
+                    <p>No remembrances have been shared yet. You can help begin this community archive.</p>
+                </div>
+                <a class="button button-primary" href="{% url 'submit_obituary' %}">Share the first remembrance</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="share-row">
+        <span>Share this collection:</span>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url|urlencode }}" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://twitter.com/intent/tweet?url={{ share_url|urlencode }}&amp;text=Remembered%20together" target="_blank" rel="noopener noreferrer">Twitter</a>
+    </div>
+</section>
+{% endblock %}
